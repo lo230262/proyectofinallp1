@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALLIGATOR PARK TICKETS</title>
+    <meta name="description" content="ALLIGATOR PARK parque de diversiones">
+    <meta name="keywords" content="ALLIGATOR PARK, Alligator, parque de diversiones, entretenimiento, Santo Domingo, familia, tickets, boleteria, entradas">
+    <meta name="author" content="ALLIGATOR PARK Team">
+     <!-- Librería QR -->
+     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+     <!--ICONS-->
+     <link rel="icon" href="../static/isotipo.png" type="image/png">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+ 
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+ </head>
+    
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link rel="stylesheet" href="../static/styledark.css">
+<script src="mode.js" defer></script>
+
+
+<!--ICONS-->
+<link rel="icon" href="../static/isotipo.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<br>
+<br>
+<br>
+<!-- NAVBAR -->
+{% include 'header.html' %}
+
+<!-- TICKETS -->
+<section id="tickets" class="container py-5 dm-sans">
+    <div class="row text-center">
+        <img src="../static/others/ALLIGATOR[1].png">
+        <!-- General Tickets -->
+        {% for ticket in general_tickets %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100" style="color: rgb(0, 0, 0);">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: rgb(255, 0, 187); font-size: 2rem;">
+                        <i>{{ ticket.nombreTicket }}</i>
+                    </h5>
+                    <p class="card-text">{{ ticket.descripcionTicket }}</p>
+                    <p class="price" style="font-size: larger;">DOP${{ ticket.precioTicket }}</p>
+                    <a href="#comprar" class="btn btn-primary" style="border-radius: 2rem;">Comprar Ticket</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- VIP Tickets -->
+        {% for ticket in vip_tickets %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100" style="color: black;">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: rgb(255, 77, 0); font-size: 2rem;">
+                        <i>{{ ticket.nombreTicket }}</i>
+                    </h5>
+                    <p class="card-text">{{ ticket.descripcionTicket }}</p>
+                    <p class="price" style="font-size: larger;">DOP${{ ticket.precioTicket }}</p>
+                    <a href="#comprar" class="btn btn-primary" style="border-radius: 2rem;">Comprar Ticket</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- ALL ACCESS Tickets -->
+        {% for ticket in all_access_tickets %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body" style="color: black;">
+                    <h5 class="card-title" style="color: rgb(30, 222, 69); font-size: 2rem;">
+                        <i>{{ ticket.nombreTicket }}</i>
+                    </h5>
+                    <p class="card-text">{{ ticket.descripcionTicket }}</p>
+                    <p class="price" style="font-size: larger;">DOP${{ ticket.precioTicket }}</p>
+                    <a href="#comprar" class="btn btn-primary" style="border-radius: 2rem;">Comprar Ticket</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+<!-- FORMULARIO -->
+ 
+<section id="comprar" class="container py-5">
+    <form id="payment-form" onsubmit="event.preventDefault(); showConfirmation();">
+        <div class="row mb-3">
+            <img src="../static/others/formdark.png">
+            <div class="col-md-6">
+                <label for="nombre" class="form-label">Nombre Completo</label>
+                <input type="text" class="form-control" id="nombre" required>
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="tipoTicket" class="form-label">Selecciona Tipo de Ticket</label>
+            <select class="form-select" id="tipoTicket" required>
+                <option value="">Selecciona un tipo de ticket</option>
+                <option value="General">General - DOP$1500.00</option>
+                <option value="VIP">VIP - DOP$2395.00</option>
+                <option value="Premium">All Access - DOP$3295.00</option>
+            </select>
+        </div>
+
+        <!-- Campo de cantidad de tickets -->
+        <div class="mb-3" id="cantidadContainer" style="display:none;">
+            <label for="cantidadTickets" class="form-label">Cantidad de Tickets</label>
+            <input type="number" class="form-control" id="cantidadTickets" min="1" value="1" required>
+        </div>
+
+        <!-- Precio Total -->
+        <div class="mb-3">
+            <p id="precioTotal" style="font-weight: bold;color: white;"></p>
+        </div>
+
+        <div class="mb-3">
+            <label for="fechaFuncion" class="form-label">Selecciona el día</label>
+            <select class="form-select" id="fechaFuncion" required>
+                <option value="Jueves">Jueves</option>
+                <option value="Viernes">Viernes</option>
+                <option value="Sábado">Sábado</option>
+                <option value="Domingo">Domingo</option>
+            </select>
+        </div>
+    
+        <div class="mb-3">
+            <input type="checkbox" id="acceptPolicies" required>
+            <label for="acceptPolicies" style="color: whitesmoke;">He leído y acepto las <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">políticas de privacidad</a>.</label> 
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Completar Compra</button>
+    </form>
+</section>
+
+<!-- MODAL de Confirmación -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirmación de Compra</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Nombre:</strong> <span id="confirmNombre"></span></p>
+                <p><strong>Correo Electrónico:</strong> <span id="confirmEmail"></span></p>
+                <p><strong>Tipo de Ticket:</strong> <span id="confirmTipoTicket"></span></p>
+                <p><strong>Cantidad:</strong> <span id="confirmCantidad"></span></p>
+                <p><strong>Fecha:</strong> <span id="confirmFecha"></span></p>
+                <p><strong>Total:</strong> <span id="confirmTotal"></span></p>
+                <p><strong>QR del Ticket:</strong></p>
+                <div id="ticketQRCode"></div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" id="emailLink" class="btn btn-success">Enviar Confirmación al Correo</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+          
+        
+<!-- MODAL politicas de privacidad -->
+<div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="privacyModalLabel">Políticas de Privacidad</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    En Alligator Park, respetamos y protegemos la privacidad de nuestros visitantes. La información personal que recolectamos se utilizará exclusivamente para gestionar la compra de entradas, coordinar actividades y enviarte información importante sobre tu visita al parque. Nunca compartiremos tus datos con terceros sin tu consentimiento previo, excepto en los casos requeridos por la ley.
+                </p>
+                <p>
+                    Recopilamos información como tu nombre, correo electrónico y detalles de pago. Estos datos se almacenan de manera segura y se utilizan únicamente para procesar tus compras y mantenerte informado sobre promociones, eventos especiales y servicios relacionados con tu experiencia en Alligator Park. Si deseas que eliminemos tus datos, puedes solicitárnoslo en cualquier momento poniéndote en contacto con nosotros.
+                </p>
+                <p>
+                    Al hacer clic en "Completar Compra", aceptas nuestras políticas de privacidad y autorizas el uso de tus datos para garantizar una experiencia mágica en el parque. Si tienes alguna pregunta sobre nuestra política de privacidad, no dudes en escribirnos. ¡Estamos aquí para ayudarte a disfrutar al máximo!
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center align-items-center" style="height: 50vh;">
+    <div class="col-md-6 text-center">
+        <img src="../static/logos/letterlogo.png" class="card-img-top img-fluid" alt="alligator">
+    </div>
+</div>
+
+
+<br>
+<hr>
+{% include 'piePagina.html' %}
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../static/functions.js"></script>
+
+</body>
+</html>
